@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda rara</title>
+    <link rel="icon" type="image/png" href="ojo.jpg">
+    <style>
+        * {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif !important;
+            box-sizing: border-box;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            transition: none !important;
+            animation: none;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-size: 13px;
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #000000;
+            border-left: none;
+            border-right: none;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blink-title {
+            animation: blinker 0.9s steps(1, end) infinite !important;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ffffff;
+            margin: 12px 0;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        input[type="text"] {
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 5px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .cutre-box {
+            border: 1px solid #ffffff;
+            padding: 12px;
+            background-color: #000000;
+        }
+
+        .grid-3x3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 650px) {
+            .grid-3x3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .info-layout, .product-detail-layout {
+                flex-direction: column !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .grid-3x3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .product-card {
+            border: 1px solid #ffffff;
+            padding: 10px;
+            text-align: center;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 250px;
+        }
+
+        .product-img-box {
+            width: 100%;
+            height: 120px;
+            border: 1px dashed #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            background-color: #050505;
+        }
+
+        .product-img-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .zoom-box {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            border: 1px solid #ffffff;
+            cursor: crosshair;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #050505;
+        }
+
+        .zoom-main-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            user-select: none;
+        }
+
+        .zoom-lens {
+            position: absolute;
+            border: 1px solid #ffffff;
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            display: none;
+            pointer-events: none;
+        }
+
+        .zoom-result {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ffffff;
+            background-color: #000000;
+            display: none;
+            background-repeat: no-repeat;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .retro-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .retro-modal-box {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            padding: 20px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+
+        <div id="main-header" style="text-align: center;">
+            <h1 class="blink-title" style="font-size: 46px; margin: 10px 0 5px 0;">
+                ΜΑΘΗΤΗΣ Store
+            </h1>
+            <div style="font-size: 15px; font-weight: bold;">
+                los productos mas ilegales a los precios mas ilegales
+            </div>
+
+            <hr>
+            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <p style="color:#000000; border: 1px solid #ffffff; padding: 2px 5px;">3. I</p>
+                <button onclick="switchTab('informacion')" id="btn-informacion"> Información </button>
+                <button onclick="switchTab('tienda')" id="btn-tienda" style="background-color: #ffffff; color: #000000;"> Tienda </button>
+                <button onclick="switchTab('codigo')" id="btn-codigo"> Código </button>
+            </div>
+            <hr>
+        </div>
+
+        <div id="main-content" style="flex: 1;">
+
+            <div id="section-tienda">
+                <div style="margin-bottom: 12px; font-weight: bold;" id="catalog-count"></div>
+                
+                <div class="grid-3x3" id="products-grid">
+                </div>
+            </div>
+
+            <div id="section-producto-detalle" class="hidden">
+                
+                <div style="margin-bottom: 15px;">
+                    <button onclick="switchTab('tienda')">&lt; Volver a la Tienda</button>
+                </div>
+
+                <div class="cutre-box">
+                    <div class="product-detail-layout" style="display: flex; gap: 20px;">
+                        
+                        <div style="flex-shrink: 0; align-self: center;">
+                            <div style="font-size: 11px; margin-bottom: 5px; text-align: center;"></div>
+                            <div id="zoom-box" class="zoom-box">
+                                <img id="zoom-main-img" class="zoom-main-img" src="" alt="Producto">
+                                <div id="zoom-lens" class="zoom-lens"></div>
+                                <div id="zoom-result" class="zoom-result"></div>
+                            </div>
+                        </div>
+
+                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h2 id="detail-title" style="margin: 0 0 10px 0; font-size: 20px; border-bottom: 1px solid #ffffff; padding-bottom: 5px;">
+                                    Nombre del Producto
+                                </h2>
+                                
+                                <div style="font-weight: bold; margin-bottom: 5px;">Descripcion del articulo:</div>
+                                <div id="detail-desc" style="border: 1px solid #ffffff; padding: 10px; margin-bottom: 12px; min-height: 100px; font-size: 12px; line-height: 1.4; background-color: #050505;">
+                                    [Cargando descripción...]
+                                </div>
+                                
+                                <div id="detail-stars" style="margin-bottom: 15px; font-size: 13px; font-weight: bold;">
+                                    Calificacion: **** (4/5)
+                                </div>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <button id="btn-buy-btc" style="padding: 8px; font-weight: bold;">
+                                    Comprar con Bitcoin
+                                </button>
+                                <button id="btn-buy-cash" style="padding: 8px; font-weight: bold;">
+                                    Comprar con Dinero
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="section-informacion" class="hidden">
+                <div class="cutre-box">
+                    <div style="font-weight: bold; font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid #ffffff; padding-bottom: 5px;">
+                        INFORMACION DE LA TIENDA
+                    </div>
+                    
+                    <div class="info-layout" style="display: flex; gap: 20px;">
+                        <!-- Columna izquierda: Texto -->
+                        <div style="flex: 1; line-height: 1.5; font-size: 12px;">
+                            <p style="margin-top: 0;">
+                                Busca las letras enumeradas por toda la tienda para formar el código secreto. Estas se ven así: "0. A". ฿ɄɆ₦₳ ₴ɄɆⱤ₮Ɇ.
+                            </p>
+                        </div>
+
+                        </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="main-footer">
+            <hr>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 12px; gap: 10px;">
+                <div>
+                    Donaciones en Bitcoin: <span style="border: 1px solid #ffffff; padding: 2px 5px; font-family: monospace !important;">NO DISPONIBLE</span>
+                </div>
+                <div>
+                    <p style="color:#ffffff">₦Ø ₵Ø₦₣łɆ₴ Ɇ₦  𝑵𝑶𝑻𝑯𝑰𝑵𝑮</p>
+                </div>
+                <div>
+                    <a href="otras_paginas.html">Otras paginas</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="section-codigo" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; padding: 20px; z-index: 2000;">
+        <div style="text-align: left;">
+            <button onclick="switchTab('tienda')">&lt; atras</button>
+        </div>
+
+        <div style="max-width: 380px; margin: 90px auto 0 auto;" class="cutre-box">
+            <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 10px;">
+                INTRODUCIR CODIGO
+            </div>            
+            <input type="text" id="code-input" style="width: 100%; text-align: center; margin-bottom: 12px;" onkeypress="if(event.key==='Enter') verifyCode()">
+            <button onclick="verifyCode()" style="width: 100%; padding: 6px; font-weight: bold;">Enviar codigo</button>
+
+            <div id="code-result" style="margin-top: 15px; font-size: 12px; text-align: center; min-height: 20px;"></div>
+        </div>
+    </div>
+
+    <div id="retro-modal" class="retro-modal-overlay hidden">
+        <div class="retro-modal-box">
+            <div id="retro-modal-title" style="font-weight: bold; font-size: 15px; border-bottom: 1px solid #ffffff; padding-bottom: 5px; margin-bottom: 10px;">
+                AVISO DEL SISTEMA
+            </div>
+            <div id="retro-modal-text" style="font-size: 13px; margin-bottom: 15px; line-height: 1.4;">
+                Mensaje...
+            </div>
+            <button onclick="closeRetroModal()" style="width: 100px; padding: 5px; font-weight: bold;">Perdón ΜΑΘΗΤΗΣ... </button>
+        </div>
+    </div>
+
+    <script>
+
+        const PRODUCTOS = [
+            {
+                id: 1,
+                nombre: "AK47 DORADA",
+                foto: "ak47.png",
+                estrellas: "**** (4/5)",
+                desc: "AK47 SACADA DE UN BUNKER RUSO ESCONDIDO EN LAS NEVADAS MONTAÑAS, IMBUIDA COMPLETAMENTE DE ORO COMO SI FUERA EL TOQUE DE MIDAS (CAZADOR). TE PODEMOS OFRECER BALAS EXPLOSIVAS PERO TENDRÁS QUE IR FÍSICAMENTE A BIELORRUSIA."
+            },
+            {
+                id: 2,
+                nombre: "PEZ MEJORADO",
+                foto: "pez.jpg",
+                estrellas: "***** (5/5)",
+                desc: "hola este pez lo encontre en la pecera de una casa abandonada que era muy hablada por los neighbors y en esa casa murieron muchas personas y ahora se encuentra este pez que si te tragas su liquido te da respuestas de una vida perfecta a mi me ha funcionado."
+            },
+            {
+                id: 3,
+                nombre: "CAJA X",
+                foto: "caja.png",
+                estrellas: "*** (3/5)",
+            desc: "Caja misteriosa que contiene productos completamente aleatorios pero variables al dinero que le metas a este producto. Si por ejemplo la compras a 800 bitcoins te puede tocar un producto muy valioso como material Kredi (por ejemplo). Y si lo compras por un dólar, pues posiblemente te encontremos y mueras."
+            },
+            {
+                id: 4,
+                nombre: "EXTRAÑO ROBOT",
+                foto: "glamrock.png",
+                estrellas: "**** (4/5)",
+                desc: "No se que es esto, me lo encontré en Partes y Servicios de la abandonada pizzería de mi pueblo."
+            },
+            {
+                id: 5,
+                nombre: "MASCOTA",
+                foto: "mascota.png",
+                estrellas: "***** (5/5)",
+                desc: "QɄɆ Ɇ₴ Ɇ₴Ø."
+            },
+            {
+                id: 6,
+                nombre: "ALMACÉN DE CARAS",
+                foto: "caras.png",
+                estrellas: "** (2/5)",
+                desc: "Estas caras pertenecían antes a unas Cuantas Personas CLAVE que tenían almas. Encúentralas. 4. S"
+            },
+            {
+                id: 7,
+                nombre: "SERVICIO DE SOPAS",
+                foto: "sopa.png",
+                estrellas: "**** (4/5)",
+                desc: "come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come come."
+            },
+            {
+                id: 8,
+                nombre: "Droga Kredi",
+                foto: "kredi.jpg",
+                estrellas: "***** (5/5)",
+                desc: "Me lo vendieron en la capital de un planeta extraño lleno de robots llamados Kreditos. No entendí nada, pero bueno se supone que esta mierda es buena."
+            },
+            {
+                id: 9,
+                nombre: "BUSCA OTRAS PÁGINAS",
+                foto: "ojo.jpg",
+                estrellas: "*** (3/5)",
+                desc: "₳QɄł ₦Ø Ⱨ₳Ɏ ₦₳Đ₳ QɄɆ VɆⱤ.."
+            }
+        ];
+
+        
+        function getFallbackSvg(titleText, subText) {
+            const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+                <rect width="100%" height="100%" fill="#0a0a0a"/>
+                <rect x="5%" y="5%" width="90%" height="90%" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="5,5"/>
+                <circle cx="150" cy="110" r="35" fill="none" stroke="#ffffff" stroke-width="2"/>
+                <path d="M120 170 Q150 140 180 170" fill="none" stroke="#ffffff" stroke-width="2"/>
+                <text x="50%" y="220" fill="#ffffff" font-family="'Comic Sans MS', sans-serif" font-size="14" text-anchor="middle" font-weight="bold">${titleText}</text>
+                <text x="50%" y="245" fill="#888888" font-family="'Comic Sans MS', sans-serif" font-size="11" text-anchor="middle">${subText || '[ FOTO RETRO ]'}</text>
+            </svg>`;
+            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgContent);
+        }
+
+        function renderProducts() {
+            const gridContainer = document.getElementById('products-grid');
+            const countDiv = document.getElementById('catalog-count');
+            
+            if (!gridContainer) return;
+            
+            countDiv.innerText = `> ${PRODUCTOS.length} productos`;
+            gridContainer.innerHTML = '';
+
+            PRODUCTOS.forEach(producto => {
+                const fallbackUrl = getFallbackSvg(`PRODUCTO ${producto.id}`, `[ FOTO ${producto.id} ]`);
+                
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-img-box">
+                        <img src="${producto.foto}" alt="${producto.nombre}" 
+                             onerror="this.onerror=null; this.src='${fallbackUrl}';">
+                    </div>
+                    <div style="font-weight: bold; margin: 4px 0;">${producto.nombre}</div>
+                    <div style="margin-bottom: 8px;">${producto.estrellas}</div>
+                    <button onclick="openProductPage(${producto.id})" style="width: 100%;">Comprar</button>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+
+        function switchTab(tabName) {
+            const secTienda = document.getElementById('section-tienda');
+            const secInfo = document.getElementById('section-informacion');
+            const secCodigo = document.getElementById('section-codigo');
+            const secProductoDetalle = document.getElementById('section-producto-detalle');
+
+            const btnTienda = document.getElementById('btn-tienda');
+            const btnInfo = document.getElementById('btn-informacion');
+            const btnCodigo = document.getElementById('btn-codigo');
+
+            // Ocultar todas las vistas
+            secTienda.classList.add('hidden');
+            secInfo.classList.add('hidden');
+            secCodigo.classList.add('hidden');
+            secProductoDetalle.classList.add('hidden');
+
+            // Restablecer estilos de botones
+            btnTienda.style.backgroundColor = '#000000';
+            btnTienda.style.color = '#ffffff';
+            btnInfo.style.backgroundColor = '#000000';
+            btnInfo.style.color = '#ffffff';
+            btnCodigo.style.backgroundColor = '#000000';
+            btnCodigo.style.color = '#ffffff';
+
+            if (tabName === 'tienda') {
+                secTienda.classList.remove('hidden');
+                btnTienda.style.backgroundColor = '#ffffff';
+                btnTienda.style.color = '#000000';
+            } else if (tabName === 'informacion') {
+                secInfo.classList.remove('hidden');
+                btnInfo.style.backgroundColor = '#ffffff';
+                btnInfo.style.color = '#000000';
+            } else if (tabName === 'codigo') {
+                secCodigo.classList.remove('hidden');
+                document.getElementById('code-input').focus();
+            }
+        }
+
+        function openProductPage(productId) {
+            const prod = PRODUCTOS.find(p => p.id === productId);
+            if (!prod) return;
+
+            // Ocultar otras vistas
+            document.getElementById('section-tienda').classList.add('hidden');
+            document.getElementById('section-informacion').classList.add('hidden');
+            document.getElementById('section-codigo').classList.add('hidden');
+            document.getElementById('section-producto-detalle').classList.remove('hidden');
+
+            document.getElementById('detail-title').innerText = prod.nombre;
+            document.getElementById('detail-desc').innerText = prod.desc;
+            document.getElementById('detail-stars').innerText = "Calificacion: " + prod.estrellas;
+
+            document.getElementById('btn-buy-btc').onclick = function() {
+                showRetroMessage(`₦Ø Ⱨ₳₵Ɇ ₣₳Ⱡ₮₳ QɄɆ ₵Ø₥₱ⱤɆ₴ ₱₳Ɽ₳ ⱤɆ₵ł฿łⱤ ɆⱠ ₵ØĐł₲Ø..`, '1. L - Pago con Bitcoin');
+            };
+            document.getElementById('btn-buy-cash').onclick = function() {
+                showRetroMessage(`₦Ø Ⱨ₳₵Ɇ ₣₳Ⱡ₮₳ QɄɆ ₵Ø₥₱ⱤɆ₴ ₱₳Ɽ₳ ⱤɆ₵ł฿łⱤ ɆⱠ ₵ØĐł₲Ø.`, 'Pago en Efectivo');
+            };
+
+            const zoomMainImg = document.getElementById('zoom-main-img');
+            const fallbackUrl = getFallbackSvg(prod.nombre, `[ FOTO ${prod.id} ]`);
+
+            zoomMainImg.onerror = function() {
+                this.onerror = null;
+                this.src = fallbackUrl;
+                setupZoomLens(fallbackUrl);
+            };
+
+            zoomMainImg.src = prod.foto;
+            setupZoomLens(prod.foto);
+
+            window.scrollTo(0, 0);
+        }
+
+
+        function setupZoomLens(imageSrc) {
+            const container = document.getElementById('zoom-box');
+            const lens = document.getElementById('zoom-lens');
+            const result = document.getElementById('zoom-result');
+
+            result.style.backgroundImage = `url('${imageSrc}')`;
+            result.style.backgroundSize = "500px 500px";
+
+            container.onmousemove = function(e) {
+                const rect = container.getBoundingClientRect();
+                let x = e.clientX - rect.left - (lens.offsetWidth / 2);
+                let y = e.clientY - rect.top - (lens.offsetHeight / 2);
+
+                // Evitar que la lente salga del contenedor
+                if (x > rect.width - lens.offsetWidth) { x = rect.width - lens.offsetWidth; }
+                if (x < 0) { x = 0; }
+                if (y > rect.height - lens.offsetHeight) { y = rect.height - lens.offsetHeight; }
+                if (y < 0) { y = 0; }
+
+                lens.style.left = x + "px";
+                lens.style.top = y + "px";
+
+                const cx = result.offsetWidth / lens.offsetWidth;
+                const cy = result.offsetHeight / lens.offsetHeight;
+
+                result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+            };
+
+            container.onmouseenter = function() {
+                lens.style.display = "block";
+                result.style.display = "block";
+            };
+
+            container.onmouseleave = function() {
+                lens.style.display = "none";
+                result.style.display = "none";
+            };
+        }
+
+
+        function verifyCode() {
+            const inputVal = document.getElementById('code-input').value.trim();
+            const resultDiv = document.getElementById('code-result');
+            
+            if (!inputVal) {
+                resultDiv.innerText = "Ɇ₴₵Ɽł฿Ɇ ₳Ⱡ₲Ø, ₦Ø ĐɆJɆ₴ ₦₳Đ₳.";
+                resultDiv.style.color = "#ff5555";
+                return;
+            }
+
+            if (inputVal.toUpperCase() === "LUIS") {
+                resultDiv.style.color = "#00ff00";
+                resultDiv.innerText = "฿łɆ₦ ⱧɆ₵ⱧØ";
+                document.getElementById('code-input').value = "";
+
+                // Redirección a la página deseada tras 1 segundo
+                setTimeout(() => {
+                    window.location.href = "fernan.html"; // <-- Cambia esta URL por la página a la que quieras redirigir
+                }, 1000);
+            } else {
+                resultDiv.style.color = "#ff5555";
+                resultDiv.innerText = "₥₳Ⱡ";
+                document.getElementById('code-input').value = "";
+                showRetroMessage("₥₳Ⱡ ⱧɆ₵ⱧØ", "₵ØĐł₲Ø ł₦₵ØⱤⱤɆ₵₮Ø");
+            }
+        }
+
+        function showRetroMessage(msgText, titleText) {
+            document.getElementById('retro-modal-title').innerText = titleText || "AVISO DEL SISTEMA";
+            document.getElementById('retro-modal-text').innerText = msgText;
+            document.getElementById('retro-modal').classList.remove('hidden');
+        }
+
+        function closeRetroModal() {
+            document.getElementById('retro-modal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            renderProducts();
+
+            // Configurar fallback para la imagen de la sección de Información
+            const infoImg = document.getElementById('info-image');
+            if (infoImg) {
+                infoImg.onerror = function() {
+                    this.onerror = null;
+                    this.src = getFallbackSvg("MOHA STORE", "[ tu_imagen_info.jpg ]");
+                };
+            }
+        };
+    </script>
+</body>
+</html>

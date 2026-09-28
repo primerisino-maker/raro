@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Alma</title>
+    <link rel="icon" type="image/png" href="ojo.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+
+                * {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif !important;
+            box-sizing: border-box;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            transition: none !important;
+            animation: none;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #000000;
+            color: #ffffff;
+            gap: 20px;
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        img {
+            width: 300px;
+            height: auto;
+        }
+
+        #segundaImagen {
+    width: 500px;
+    max-width: 90vw;
+}
+
+        .btn-blanco-negro {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .btn-blanco-negro:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .texto-alma {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .oculto {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="musica" src="elcrack.mp3"></audio>
+
+    <img id="primeraImagen" src="FERNAN.png" width="500" height="500" alt="Primera imagen">
+
+    <button id="btnPrincipal" class="btn-blanco-negro" onclick="mostrarSorpresa()">Recuperar alma perdida</button>
+
+    <img id="segundaImagen" src="fernanbaila.gif" alt="Segunda imagen" class="oculto">
+
+    <p id="textoAlma" class="texto-alma oculto">Alma recuperada!</p>
+
+    <script>
+        function mostrarSorpresa() {
+            document.getElementById('primeraImagen').remove();
+            document.getElementById('btnPrincipal').remove();
+
+            document.getElementById('segundaImagen').classList.remove('oculto');
+            document.getElementById('textoAlma').classList.remove('oculto');
+
+            document.getElementById('musica').play();
+
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+
+</body>
+</html>
